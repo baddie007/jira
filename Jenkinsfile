@@ -6,8 +6,8 @@ pipeline {
     maven 'Maven'
   }
   environment {
-   registry = "prabhat2020/testing4"
-   registryCredential = "06216ef3-ad77-49a6-a37b-e2e91cd08bfb"
+   registry = "arpit74/mytest"
+   registryCredential = "38c46c6-0260-4af4-adee-fe5d19c229ec"
   }
   stages {
          
@@ -17,8 +17,8 @@ pipeline {
                  $class: 'GitSCM',
                  branches: [[name: 'master']],
                  userRemoteConfigs: [[
-                    url: 'git@github.com:prabhat2020/Jira.git',
-                    credentialsId: 'github-prabhat',
+                    url: 'git@github.com:baddie007/jira.git',
+                    credentialsId: 'github',
                  ]]
                 ])
             }
@@ -51,7 +51,7 @@ post {
 void create_newjira_issue() {
     node {
       stage('JIRA') {
-        def NewJiraIssue = [fields: [project: [key: 'DEV'],
+        def NewJiraIssue = [fields: [project: [key: 'HAC'],
             summary: 'Maven Build',
             description: 'Facing some issue in building Maven Code',
             issuetype: [name:'Task']]]
