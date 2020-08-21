@@ -28,7 +28,7 @@ pipeline {
          
     stage('Initialize'){
       steps{
-        echo "We are doing some test for integration"
+        echo "We're Initialising Build Now!!!"
         echo "PATH = ${PATH}"
         }
     }
@@ -41,18 +41,23 @@ pipeline {
         
   }
 post {
-       always {
-            echo 'I will always say Hello again!'
-     create_newjira_issue()
+       success{
+           echo "Great, Build was successful!!"
+           build_success()
+       }
+
+       failure{
+           echo "Oops, Build was failed!!"
+           newjira_issue()
        }
     }
 
 }
-void create_newjira_issue() {
+void newjira_issue() {
     node {
       stage('JIRA') {
         def NewJiraIssue = [fields: [project: [key: 'HAC'],
-            summary: 'Maven Build',
+            summary: 'Build Failure',
             description: 'Facing some issue in building Maven Code',
             issuetype: [name:'Task']]]
 
@@ -65,5 +70,19 @@ void create_newjira_issue() {
   }
 }
 
+void build_success() {
+    node {
+      stage('JIRA') {
+        def NewJiraIssue = [fields: [project: [key: 'HAC'],
+            summary: 'Successful Build',
+            description: 'Build was successful',
+            issuetype: [name:'Task']]]
 
 
+    response = jiraNewIssue issue: NewJiraIssue ,site: 'JIRA'
+
+    echo response.successful.toString()
+    echo response.data.toString()
+    }
+  }
+}
